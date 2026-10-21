@@ -1,0 +1,103 @@
+```mermaid
+erDiagram
+    Patients {
+        INT id PK
+        VARCHAR(40) name
+        VARCHAR(9) nif
+        VARCHAR(20) phone_number
+        VARCHAR(150) email UK
+    }
+
+    Cases {
+        INT id PK
+        VARCHAR(40) name
+        INT patient_id FK
+    }
+
+    Episode {
+        INT id PK
+        VARCHAR(40) name
+        INT case_id FK
+    }
+
+    Medical_Units {
+        INT id PK
+        VARCHAR(40) name
+        INT episode_id FK
+    }
+
+    Units {
+        INT id PK
+        VARCHAR(40) name
+        INT medical_unit_id FK
+    }
+
+    Rooms {
+        INT id PK
+        VARCHAR(40) name
+        INT unit_id FK
+    }
+
+    Staffs {
+        INT id PK
+        VARCHAR(40) name
+        VARCHAR(9) nif
+        VARCHAR(20) phone_number
+        VARCHAR(150) email UK
+    }
+
+    Shift {
+        INT id PK
+        DATETIME start_time
+        DATETIME end_time
+        VARCHAR(40) name
+        INT unit_id FK
+        INT staff_id FK
+    }
+
+    Episodes_Staffs {
+        INT episode_id FK
+        INT staff_id FK
+    }
+
+    Finances {
+        INT id PK
+        DECIMAL(10_2) cost
+        TIMESTAMP createdAt
+        INT case_id FK
+    }
+
+    Reports {
+        INT id PK
+        DECIMAL(10_2) cost
+        TIMESTAMP createdAt
+        INT case_id FK
+    }
+
+    Insurances {
+        INT id PK
+        VARCHAR(30) name
+        TIMESTAMP createdAt
+        INT case_id FK
+    }
+
+    Finance_Insurance {
+        INT finance_id FK
+        INT insurance_id FK
+    }
+
+    Patients ||--o{ Cases : "tem"
+    Cases ||--o{ Episode : "tem"
+    Episode ||--o{ Medical_Units : "tem"
+    Medical_Units ||--o{ Units : "tem"
+    Units ||--o{ Rooms : "tem"
+    Units ||--o{ Shift : "tem"
+    Staffs ||--o{ Shift : "cumpre"
+    Episode ||--o{ Episodes_Staffs : "envolve"
+    Staffs ||--o{ Episodes_Staffs : "participa"
+    Cases ||--o{ Finances : "gera"
+    Cases ||--o{ Reports : "gera"
+    Cases ||--o{ Insurances : "tem"
+    Finances ||--o{ Finance_Insurance : "cobre"
+    Insurances ||--o{ Finance_Insurance : "cobre"
+```
