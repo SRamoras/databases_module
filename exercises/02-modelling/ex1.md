@@ -1,7 +1,5 @@
 #### 1. An ER diagram in Mermaid, with cardinalities. ####
 
-# Biblioteca municipal: diagrama ER
-
 ```mermaid
 erDiagram
     READER ||--o{ LOAN : "faz"
