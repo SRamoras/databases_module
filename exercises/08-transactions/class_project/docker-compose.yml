@@ -1,0 +1,46 @@
+services:
+
+
+  db_public:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${PUBLIC_ADMIN_USER}
+      POSTGRES_PASSWORD: ${PUBLIC_ADMIN_PASSWORD}
+      POSTGRES_DB: ${PUBLIC_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_public_data:/var/lib/postgresql/data
+
+
+
+  db_private:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${PRIVATE_ADMIN_USER}
+      POSTGRES_PASSWORD: ${PRIVATE_ADMIN_PASSWORD}
+      POSTGRES_DB: ${PRIVATE_DB}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - db_private_data:/var/lib/postgresql/data
+
+
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "127.0.0.1:5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - db_public
+      - db_private
+
+volumes:
+  db_public_data:
+  db_private_data:
+  pgadmin_data:
