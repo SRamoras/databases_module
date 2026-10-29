@@ -33,8 +33,8 @@ An ISBN-13 has 13 digits. Hyphens may appear between digits, never at the start 
 
 ## Como correr
 
-```
-./scripts/create-db.sh ch03
+```bash
+./scripts/create-db.sh ch03 --reset
 docker compose exec -T postgres psql -U postgres -d ch03 < exercises/03-ddl/challenge/isbn.sql
 ```
 
@@ -91,7 +91,3 @@ Os 3 válidos entram e os 4 inválidos falham com `value for domain isbn13 viola
 - **A base de dados só pode confiar nela se for IMMUTABLE.** O PostgreSQL exige funções `IMMUTABLE` em índices sobre expressões e em colunas geradas (uma função `VOLATILE` ali dá `functions in index expression must be marked IMMUTABLE`), e o planeador pode calcular o resultado uma vez e reutilizá-lo, em vez de o recalcular para cada linha.
 
 Uma nota de rigor: o PostgreSQL não verifica sozinho que a função é mesmo imutável, e aceita um `CHECK` com uma função `VOLATILE`. A responsabilidade é de quem escreve: só se marca `IMMUTABLE` uma função que de facto o é. Marcá-la `IMMUTABLE` e depois fazê-la ler uma tabela seria mentir à base de dados, e a constraint deixava de ser fiável.
-
-## Nota sobre como o output foi gerado
-
-O output acima foi produzido com `psql` contra um PostgreSQL 16.15 local (`createdb ch03` e o mesmo comando `psql`, sem o `docker compose exec`), porque o Docker não estava disponível onde corri o ficheiro.challenge
