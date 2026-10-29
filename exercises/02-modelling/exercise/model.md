@@ -200,6 +200,7 @@ Todas as colunas são obrigatórias, exceto `return_date` (até devolver) e `pai
 - **1NF:** os autores de um livro não estão numa lista dentro de `BOOK`; cada autor é uma linha em `BOOK_AUTHOR`.
 - **2NF:** a única chave composta é `BOOK_AUTHOR`, e `author_order` depende do par livro + autor, não de um deles sozinho.
 - **3NF:** a editora e os autores têm tabelas próprias, em vez de repetir o nome e o país em cada livro. Assim nenhuma coluna depende de outra que não seja a chave.
+- **Exceção assumida, `LOAN.due_date`:** como o prazo é sempre 14 dias, `loan_date → due_date`, o que em rigor quebra a 3NF. Mantenho a coluna porque o enunciado diz que o empréstimo regista o prazo, e porque assim o prazo de empréstimos antigos não muda se a regra dos 14 dias mudar. A regra fica protegida por `CHECK (due_date = loan_date + 14)`, por isso as duas colunas nunca se contradizem. Para 3NF estrita, tirava-se a coluna e calculava-se `loan_date + 14`. (Ver também o desafio, tarefa 3.)
 
 ---
 
