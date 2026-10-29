@@ -1,0 +1,4 @@
+.venv/
+.env.a
+.env.b
+.env.setup
