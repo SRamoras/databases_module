@@ -9,7 +9,7 @@ SELECT (SELECT count(*) FROM job_result)                 AS results,
 -- Nenhum job_id com mais de uma linha (deve devolver 0 linhas).
 SELECT job_id, count(*) FROM job_result GROUP BY job_id HAVING count(*) > 1;
 
--- Nenhum trabalho done sem resultado, nem resultado de um trabalho que não está done.
+-- Nenhum trabalho done sem resultado.
 SELECT count(*) AS done_without_result
 FROM job j WHERE j.status = 'done' AND NOT EXISTS (SELECT 1 FROM job_result r WHERE r.job_id = j.job_id);
 

@@ -113,7 +113,7 @@ active staff in store 1 before: 20
   staff 1436: attempt 1, serialization failure (40001), retrying
   staff 1502: attempt 1, serialization failure (40001), retrying
   staff 1508: attempt 1, serialization failure (40001), retrying
-  ... (17 das 20 primeiras tentativas falham)
+  ... (19 das 20 primeiras tentativas falham)
   staff 1511: attempt 1, saw 20 active, deactivated
   staff 1502: attempt 2, saw 19 active, deactivated
   staff 1510: attempt 2, saw 18 active, deactivated
