@@ -31,6 +31,13 @@ An ISBN-13 has 13 digits. Hyphens may appear between digits, never at the start 
 
 ---
 
+## Ficheiros
+
+| Ficheiro | Conteúdo |
+|----------|----------|
+| `isbn.sql` | A função, o domínio, a tabela e os 7 `INSERT` de teste |
+| `README.md` | Este ficheiro: o output de `isbn.sql` e a explicação da tarefa 4 |
+
 ## Como correr
 
 ```bash

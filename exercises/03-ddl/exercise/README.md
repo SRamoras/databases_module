@@ -15,6 +15,14 @@
 
 ---
 
+## Ficheiros
+
+| Ficheiro | Conteúdo |
+|----------|----------|
+| `schema.sql` | Cria todas as tabelas da biblioteca |
+| `invalid.sql` | Dados válidos de preparação e os 5 comandos que têm de falhar |
+| `README.md` | Este ficheiro: o output de `invalid.sql` |
+
 ## Como correr
 
 ```bash
