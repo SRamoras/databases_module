@@ -249,7 +249,7 @@ Imagina que a biblioteca guardava em que prateleira está cada livro em cada fil
 
 `BOOK_SHELF(branch_id, book_id, shelf)`
 
-Regras: num filial, um livro está numa só prateleira, e o código da prateleira é único em toda a biblioteca (por exemplo `L1-A` é sempre da filial L1).
+Regras: numa filial, um livro está numa só prateleira, e o código da prateleira é único em toda a biblioteca (por exemplo `L1-A` é sempre da filial L1).
 
 | branch_id | book_id | shelf |
 |---|---|---|
