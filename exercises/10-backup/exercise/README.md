@@ -8,6 +8,8 @@
 | `counts.sql` | Contagens de `payment`, `film_actor`, `film_category` e dos pagamentos de 2026 |
 | `verify.sql` | Comparação linha a linha das três tabelas com uma cópia restaurada do backup |
 
+Os comandos, por ordem e a partir da raiz do repositório, estão na secção "Procedimento" do runbook.
+
 Os backups vão para `backups/` na raiz do repositório, que está no `.gitignore` (tal como `*.dump`), por isso não são submetidos.
 
 ## Resumo

@@ -23,7 +23,7 @@ echo $?   # 0 = backup verificado
 ## Tarefa 1: `backup.sh`
 
 1. `docker compose exec -T postgres pg_dump -Fc pagila > pagila_YYYY-MM-DD_HHMM.dump`
-2. Contagem exata (`count(*)`) de cada tabela do schema `public` para `pagila_YYYY-MM-DD_HHMM.counts`, uma linha `tabela|linhas` por tabela (70 tabelas: as 15 do Pagila, as 54 partições de `payment` e a própria `payment`):
+2. Contagem exata (`count(*)`) de cada tabela do schema `public` para `pagila_YYYY-MM-DD_HHMM.counts`, uma linha `tabela|linhas` por tabela (70 tabelas: 14 do Pagila, as 55 partições de `payment` e a própria `payment`):
 
    ```
    actor|200
