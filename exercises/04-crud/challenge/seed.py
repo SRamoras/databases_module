@@ -8,12 +8,12 @@ Os dados são reproduzíveis (semente fixa) e o script é idempotente: se os alu
 """
 
 import os
-import random
 import sys
 import time
 from datetime import UTC, datetime, timedelta
 
 import psycopg
+from faker import Faker
 
 SEED = 42
 FIRST_ID = 100_001
@@ -21,7 +21,7 @@ ROWS = 1_000_000
 LAST_ID = FIRST_ID + ROWS - 1
 START = datetime(2022, 1, 1, tzinfo=UTC)
 END = datetime(2026, 7, 31, 23, 59, 59, tzinfo=UTC)
-NOT_RETURNED = 0.02  # 2% dos alugueres ficam por devolver
+NOT_RETURNED_PCT = 2  # 2% dos alugueres ficam por devolver
 MAX_RENTAL_SECONDS = 10 * 24 * 3600  # devolução até 10 dias depois
 
 
@@ -31,22 +31,23 @@ def ids(conn: psycopg.Connection, query: str) -> list[int]:
 
 
 def generate(inventory: list[int], customers: list[int], staff: list[int], taken: set):
-    rng = random.Random(SEED)
+    Faker.seed(SEED)
+    fake = Faker()
     span = int((END - START).total_seconds())
     for rental_id in range(FIRST_ID, LAST_ID + 1):
         while True:
-            rental_date = START + timedelta(seconds=rng.randint(0, span))
-            inventory_id = rng.choice(inventory)
-            customer_id = rng.choice(customers)
+            rental_date = START + timedelta(seconds=fake.random_int(0, span))
+            inventory_id = fake.random.choice(inventory)
+            customer_id = fake.random.choice(customers)
             key = (rental_date, inventory_id, customer_id)
             if key not in taken:  # respeita o índice único (rental_date, inventory_id, customer_id)
                 taken.add(key)
                 break
-        if rng.random() < NOT_RETURNED:
+        if fake.boolean(chance_of_getting_true=NOT_RETURNED_PCT):
             return_date = None
         else:
-            return_date = rental_date + timedelta(seconds=rng.randint(1, MAX_RENTAL_SECONDS))
-        yield rental_id, rental_date, inventory_id, customer_id, return_date, rng.choice(staff)
+            return_date = rental_date + timedelta(seconds=fake.random_int(1, MAX_RENTAL_SECONDS))
+        yield rental_id, rental_date, inventory_id, customer_id, return_date, fake.random.choice(staff)
 
 
 def main() -> None:

@@ -5,9 +5,9 @@
 | Ficheiro | Conteúdo |
 |----------|----------|
 | `seed.py` | Acrescenta 1 000 000 de linhas a `rental` com `COPY`. O nome da base de dados é o argumento. |
-| `pyproject.toml`, `uv.lock` | Projeto uv (dependência: `psycopg[binary]`) |
+| `pyproject.toml`, `uv.lock` | Projeto uv (dependências: `faker` e `psycopg[binary]`, como no enunciado) |
 
-O enunciado sugere `uv add faker`, mas não é preciso: um aluguer só tem IDs e datas, sem nomes nem moradas falsas. Os valores são gerados com `random.Random(42)`, que é reproduzível e muito mais rápido do que o Faker para 1 000 000 de linhas.
+Os valores são gerados com o Faker, com a semente fixa `Faker.seed(42)`. Um aluguer só tem IDs e datas, por isso as datas e a devolução usam `fake.random_int` e `fake.boolean`, e os IDs são sorteados com `fake.random.choice`, o gerador do Faker com a mesma semente. `fake.random_element` demora cerca de 8 µs por chamada, contra 1 µs de `fake.random.choice`, e com três sorteios por linha a carga passaria dos 30 segundos.
 
 ## Como correr
 
@@ -45,26 +45,26 @@ FROM rental WHERE rental_id > 100000;"
 | `rental_date` entre 2022-01-01 e 2026-07-31 | Segundo aleatório entre `2022-01-01 00:00:00` e `2026-07-31 23:59:59` UTC |
 | `return_date` é `NULL` ou posterior | 2% ficam `NULL`. Os restantes são `rental_date` + 1 segundo a 10 dias. |
 | Índice único `(rental_date, inventory_id, customer_id)` | O script carrega as chaves já existentes num `set` e junta cada chave nova. Se uma combinação se repetir, sorteia outra. |
-| Semente fixa | `random.Random(42)`. Os IDs são lidos com `ORDER BY`, por isso as listas de onde se sorteia são iguais nas duas cópias. |
+| Semente fixa | `Faker.seed(42)`. Os IDs são lidos com `ORDER BY`, por isso as listas de onde se sorteia são iguais nas duas cópias. |
 | Idempotente | Antes de carregar, conta os alugueres 100 001 a 1 100 000. Se já lá estão todos, termina sem escrever nada. O `COPY` e o `setval` correm na mesma transação, por isso nunca fica uma carga a meio: ou entram as 1 000 000 linhas ou nenhuma. Se encontrar uma carga parcial (só possível com alterações manuais), para com erro em vez de duplicar. |
 
 ## Tempos
 
 ```
 == seed ch04_a
-ch04_a: 1000000 alugueres inseridos em 20.6s
+ch04_a: 1000000 alugueres inseridos em 25.7s
 
-real	0m21.488s
+real	0m26.899s
 == seed ch04_b
-ch04_b: 1000000 alugueres inseridos em 22.2s
+ch04_b: 1000000 alugueres inseridos em 25.3s
 
-real	0m22.650s
+real	0m26.504s
 ```
 
 | Base de dados | Tempo |
 |---------------|-------|
-| `ch04_a` | 21.5 s |
-| `ch04_b` | 22.7 s |
+| `ch04_a` | 26.9 s |
+| `ch04_b` | 26.5 s |
 
 As duas cargas ficam abaixo dos 30 segundos. Medido com o Docker Desktop no Windows: o script correu num contentor `uv` (Python 3.13) na mesma rede Docker que o PostgreSQL.
 
@@ -74,13 +74,13 @@ As duas cargas ficam abaixo dos 30 segundos. Medido com o Docker Desktop no Wind
 == checksum ch04_a
  new_rows |             checksum
 ----------+----------------------------------
-  1000000 | c9660f1f005f2cda2f5ad5f7b1b92565
+  1000000 | af78ce7379834d1be7cebfddbce6020d
 (1 row)
 
 == checksum ch04_b
  new_rows |             checksum
 ----------+----------------------------------
-  1000000 | c9660f1f005f2cda2f5ad5f7b1b92565
+  1000000 | af78ce7379834d1be7cebfddbce6020d
 (1 row)
 ```
 
@@ -94,17 +94,17 @@ Segunda execução em `ch04_a`, com a contagem e o checksum antes e depois:
 == antes: ch04_a
  new_rows |             checksum
 ----------+----------------------------------
-  1000000 | c9660f1f005f2cda2f5ad5f7b1b92565
+  1000000 | af78ce7379834d1be7cebfddbce6020d
 
 == segunda execução
 ch04_a: os 1000000 alugueres já existem, nada a fazer.
 
-real	0m0.906s
+real	0m1.092s
 
 == depois: ch04_a
  new_rows |             checksum
 ----------+----------------------------------
-  1000000 | c9660f1f005f2cda2f5ad5f7b1b92565
+  1000000 | af78ce7379834d1be7cebfddbce6020d
 ```
 
 A contagem e o checksum não mudaram.
@@ -122,7 +122,7 @@ FROM rental WHERE rental_id > 100000;
 ```
  bad_rental_date | bad_return_date | not_returned |  min   |   max
 -----------------+-----------------+--------------+--------+---------
-               0 |               0 |        19945 | 100001 | 1100000
+               0 |               0 |        20058 | 100001 | 1100000
 (1 row)
 
  last_value
