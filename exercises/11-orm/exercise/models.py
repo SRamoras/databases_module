@@ -5,9 +5,11 @@ from typing import Optional
 from sqlalchemy import DateTime, ForeignKey, Numeric, SmallInteger, Text
 from sqlalchemy.dialects.postgresql import ARRAY, ENUM, TSVECTOR
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy.ext.declarative import declarative_base
 
-class Base = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
+
 
 class Language(Base):
     __tablename__ = "language"
