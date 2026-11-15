@@ -1,0 +1,8 @@
+[project]
+name = "ch14-daily-revenue"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "pymongo>=4.10",
+    "pytest>=8",
+]
