@@ -1,0 +1,9 @@
+[project]
+name = "ch11-orm-tests"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "psycopg[binary]>=3.2",
+    "pytest>=8",
+    "sqlalchemy>=2",
+]
